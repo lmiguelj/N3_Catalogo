@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins="/*")
+@CrossOrigin(origins = "/*")
 @RestController
 @RequestMapping("/usuarios")
 public class UsuariosJpaController implements Serializable {
@@ -33,36 +33,39 @@ public class UsuariosJpaController implements Serializable {
     public UsuariosJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
+
     private EntityManagerFactory emf = null;
 
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
-    
+
     @CrossOrigin("*")
     @PostMapping("/login")
-    public HashMap<String, String> login(@RequestBody Usuarios usuario){
+    public HashMap<String, String> login(@RequestBody Usuarios usuario) {
         HashMap<String, String> map = new HashMap<>();
         System.out.println("Correo: " + usuario.getCorreo() + " - " + usuario.getContrasena());
         EntityManager em = getEntityManager();
-        try{
-            String query = "SELECT * FROM usuarios WHERE correo = '"+usuario.getCorreo()+"' AND contrasena = '"+usuario.getContrasena()+"'";
+        try {
+            String query = "SELECT * FROM usuarios WHERE correo = '" + usuario.getCorreo() + "' AND contrasena = '"
+                    + usuario.getContrasena() + "'";
             System.out.println("" + query);
             Query q = em.createNativeQuery(query);
             List<Usuarios> lu = q.getResultList();
-            if(lu.isEmpty()){
-                map.put("msj","No");
-            }else{
-                map.put("msj","Ok");
+            if (lu.isEmpty()) {
+                map.put("msj", "No");
+            } else {
+                map.put("msj", "Ok");
             }
-        }catch(Exception ex){
+        } catch (Exception ex) {
             System.out.println(" " + ex);
             map.put("msj", "Error de Excepcion !!!");
         }
-        
+
         return map;
     }
 
+    @CrossOrigin("*")
     @PostMapping()
     public String create(@RequestBody Usuarios usuarios) {
         EntityManager em = null;
@@ -79,6 +82,7 @@ public class UsuariosJpaController implements Serializable {
         }
     }
 
+    @CrossOrigin("*")
     @PutMapping()
     public String edit(@RequestBody Usuarios usuarios) throws NonexistentEntityException, Exception {
         EntityManager em = null;
@@ -104,6 +108,7 @@ public class UsuariosJpaController implements Serializable {
         }
     }
 
+    @CrossOrigin("*")
     @DeleteMapping("/{id}")
     public String destroy(@PathVariable("id") Integer id) throws NonexistentEntityException {
         EntityManager em = null;
@@ -127,6 +132,7 @@ public class UsuariosJpaController implements Serializable {
         }
     }
 
+    @CrossOrigin("*")
     @GetMapping()
     public List<Usuarios> findUsuariosEntities() {
         return findUsuariosEntities(true, -1, -1);
@@ -173,5 +179,5 @@ public class UsuariosJpaController implements Serializable {
             em.close();
         }
     }
-    
+
 }
